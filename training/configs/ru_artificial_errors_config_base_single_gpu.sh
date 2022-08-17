@@ -12,7 +12,7 @@ CHECKPOINT_PATH=/scratch/project_2002016/t2t_train/artificial_errors-ru-tep0.15-
 
 MODEL_TYPE=transformer_base_single_gpu
 
-EXPERIMENT_ROOT_DIR=/projappl/project_2002016/low-resource-gec-wnut2019/training # TODO set it yourself
+EXPERIMENT_ROOT_DIR=/projappl/project_2002016/low-resource-gec-wnut2019/training
 DATA_ROOT_DIR=/scratch/project_2002016
 
 PROBLEM=artificial_errors

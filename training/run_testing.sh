@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 set -x
 
 configuration_file=$1
@@ -21,11 +23,9 @@ t2t-datagen \
 
 
 
-
-
 t2t-decoder --data_dir ${NO_EDIT_DATA_DIR} \
---problem artificial_errors --model transformer \
---hparams_set transformer_base_single_gpu \
+--problem artificial_errors --model ${MODEL} \
+--hparams_set ${MODEL_TYPE} \
 --decode_hparams="beam_size=4,alpha=0.6" \
 --output_dir ${MODEL_PATH} \
 --decode_from_file=${INPUT_FILE} \
