@@ -183,7 +183,7 @@ def introduce_char_level_errors_on_sentence(sentence, replace_prob, insert_prob,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("token_file", type=str, help="TSV file with tokens.")
+    parser.add_argument("--token_file", type=str, help="TSV file with tokens.")
 
     parser.add_argument("--lang", type=str, default="cs", help="Language identifier for ASpell (e.g. cs, en, de, ru).")
 

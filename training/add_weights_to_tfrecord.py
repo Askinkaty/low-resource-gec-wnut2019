@@ -45,14 +45,21 @@ def serialize_example(original, corrected, weights):
 def main(args):
   subword_encoder = SubwordTextEncoder(args.vocab_file)
 
-  record_iterator = tf.python_io.tf_record_iterator(path=args.path)
+  #record_iterator = tf.io.tf_record_iterator(path=args.path)
+  record_iterator = tf.data.TFRecordDataset(args.path)                    
+
   record_basename = os.path.basename(args.path)
 
-  with tf.python_io.TFRecordWriter(os.path.join(args.outdir, record_basename)) as writer:
+  with tf.io.TFRecordWriter(os.path.join(args.outdir, record_basename)) as writer:
     for string_record in record_iterator:
-      example = tf.train.Example()
-      example.ParseFromString(string_record)
+      example_bytes = string_record.numpy()
 
+      example = tf.train.Example()
+    
+
+      #print(string_record)
+      example.ParseFromString(example_bytes)
+      #print(example.features.feature)
       inputs = dict(example.features.feature)['inputs']
 
       inputs = inputs.int64_list.value

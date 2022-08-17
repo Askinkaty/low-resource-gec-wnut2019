@@ -1,8 +1,12 @@
+#!/usr/bin/env bash
+
+echo "here"
 set -x
 
-source ~/virtualenvs/t2t/bin/activate
+echo "here again"
+# source ~/virtualenvs/t2t/bin/activate
 
-configuration_file=$1
+configuration_file=configs/ru_artificial_errors_config_base_single_gpu.sh
 
 source ${configuration_file}
 echo "Configuration file loaded"
@@ -33,25 +37,27 @@ echo "Generating train files with edit-weights into ${DATA_DIR}"
 if [ ! -d ${DATA_DIR} ]; then
     mkdir ${DATA_DIR}
     for tf_record in ${NO_EDIT_DATA_DIR}/*-train-*; do
-        ~/virtualenvs/t2t/bin/python3 add_weights_to_tfrecord.py ${tf_record} ${DATA_DIR} ${VOCAB_FILE} ${EDIT_WEIGHT}
+        python3 ./add_weights_to_tfrecord.py ${tf_record} ${DATA_DIR} ${VOCAB_FILE} ${EDIT_WEIGHT}
     done
     
     cp ${VOCAB_FILE} ${DATA_DIR}/$(basename ${VOCAB_FILE})
 fi
 
-# train
+
+# # train
 echo "Training"
 t2t-trainer \
-  --data_dir=${DATA_DIR} \
-  --problem=${PROBLEM} \
-  --model=${MODEL} \
-  --hparams_set=${MODEL_TYPE} \
-  --hparams="input_word_dropout=${INPUT_WORD_DROPOUT_RATE},target_word_dropout=${TARGET_WORD_DROPOUT_RATE},batch_size=${BATCH_SIZE},max_length=${MAX_LEN},learning_rate_warmup_steps=${WARMUP_STEPS},learning_rate_constant=${LEARNING_RATE_CONSTANT},learning_rate_schedule=constant*rsqrt_decay,optimizer=Adafactor" \
-  --output_dir=${TRAIN_DIR} \
-  --t2t_usr_dir=${PROBLEM_DIR} \
-  --worker_gpu=${NUM_GPUS} \
-  --train_steps=6000000 \
-  --keep_checkpoint_every_n_hours=4 \
-  --keep_checkpoint_max=100 \
-  --schedule=train \
-  --save_checkpoints_secs=3600 
+   --data_dir=${DATA_DIR} \
+   --problem=${PROBLEM} \
+   --model=${MODEL} \
+   --hparams_set=${MODEL_TYPE} \
+   --hparams="input_word_dropout=${INPUT_WORD_DROPOUT_RATE},target_word_dropout=${TARGET_WORD_DROPOUT_RATE},batch_size=${BATCH_SIZE},max_length=${MAX_LEN},learning_rate_warmup_steps=${WARMUP_STEPS},learning_rate_constant=${LEARNING_RATE_CONSTANT},learning_rate_schedule=constant*rsqrt_decay,optimizer=Adafactor" \
+   --output_dir=${TRAIN_DIR} \
+   --t2t_usr_dir=${PROBLEM_DIR} \
+   --worker_gpu=${NUM_GPUS} \
+   --train_steps=6000000 \
+   --keep_checkpoint_every_n_hours=4 \
+   --keep_checkpoint_max=100 \
+   --schedule=train \
+   --save_checkpoints_secs=3600 \
+   --warm_start_from=${CHECKPOINT_PATH}

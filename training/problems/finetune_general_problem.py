@@ -50,7 +50,7 @@ class FinetuneGeneralProblem(text_problems.Text2TextProblem):
 
         # glob pattern specifies path to all chunk files containing synthetised samples
         # TODO specify it to match your situation
-        artificial_glob_pattern = '/home/naplava/troja/czesl_experiments/artificial_data/data/{}/chunks/{}-{}-{}-{}/*'.format(args.lang, args.token_err_prob, args.token_err_distribution, args.char_err_prob, args.char_err_distribution)
+        artificial_glob_pattern = '/scratch/project_2002016/chunks/{}-{}-{}-{}/*'.format(args.lang, args.token_err_prob, args.token_err_distribution, args.char_err_prob, args.char_err_distribution)
         artificial_chunks = sorted(glob.glob(artificial_glob_pattern))
 
         print(dataset_split, type(dataset_split))
@@ -71,10 +71,11 @@ class FinetuneGeneralProblem(text_problems.Text2TextProblem):
             for artificial_chunk in artificial_chunks:
                 with open(artificial_chunk) as reader:
                     artificial_lines.extend(reader.read().splitlines())
-
+            print('len original data: ', len(original_data))
             num_artificial_sentences = args.additional_artificial_sentences
             num_original_data_cycles_to_generate = max(1, int((num_artificial_sentences / len(original_data)) / args.data_ratio))
-            print('Generating {} original lines'.format(num_original_data_cycles_to_generate))
+            print('Generating {} original data cyrcles'.format(num_original_data_cycles_to_generate))
+            print('Original lines: ', num_original_data_cycles_to_generate *len(original_data))
             for _ in range(num_original_data_cycles_to_generate):
                 for l1, l2 in original_data:
                     yield {"inputs": l1, "targets": l2}

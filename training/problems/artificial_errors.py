@@ -36,12 +36,13 @@ class ArtificialErrors(text_problems.Text2TextProblem):
         args = parser.parse_args()
         del data_dir
         del tmp_dir
-
+        print('DATASET SPLIT', dataset_split)
         # glob pattern specifies path to all chunk files containing synthetised samples
         # TODO specify it to match your situation
-        glob_pattern = '/home/naplava/troja/czesl_experiments/artificial_data/data/{}/chunks/{}-{}-{}-{}/*'.format(args.lang, args.token_err_prob, args.token_err_distribution, args.char_err_prob, args.char_err_distribution)
+        glob_pattern = '/scratch/project_2002016/chunks/{}/{}-{}-{}-{}/*'.format(args.lang, args.token_err_prob, args.token_err_distribution, args.char_err_prob, args.char_err_distribution)
         print('glob_pattern:' + glob_pattern)
         train_files = glob.glob(glob_pattern)
+        print(train_files)
         if dataset_split == 'train':
             for train_file in train_files:
                 print(train_file)
